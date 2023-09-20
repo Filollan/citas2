@@ -1,15 +1,30 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import Alerta from "./Alerta";
 
-const Formulario = ({ pacientes, setPacientes }) => {
+
+const Formulario = ({ pacientes, setPacientes, paciente }) => {
 
     const [nombre, setNombre] = useState("");
     const [propietario, setPropietario] = useState("");
     const [email, setEmail] = useState("");
     const [alta, setAlta] = useState("");
     const [sintomas, setSintomas] = useState("");
-    const [alerta, setAlerta] = useState({})
+    const [alerta, setAlerta] = useState("")
 
+    useEffect(() => {
+        if (Object.keys(paciente).lenght !== 0) {
+            setNombre(paciente.nombre);
+            setPropietario(paciente.propietario);
+            setEmail(paciente.email);
+            setAlta(paciente.alta);
+            setSintomas(paciente.sintomas);
+
+        }
+    }, [paciente])
+
+    const generarId = () => {
+        return Math.random().toString(32).substring(2);
+    }
     const handleSubmit = (e) => {
         e.preventDefault();
 
@@ -25,16 +40,20 @@ const Formulario = ({ pacientes, setPacientes }) => {
             mensaje: "Paciente registrado"
         })
 
+        const nuevoPaciente = {
+            nombre,
+            propietario,
+            email,
+            alta,
+            sintomas,
+            id: generarId()
+        }
+
         setPacientes(
             [
                 ...pacientes,
-                {
-                    nombre,
-                    propietario,
-                    email,
-                    alta,
-                    sintomas
-                }
+                nuevoPaciente
+
             ]
         )
 
@@ -43,6 +62,11 @@ const Formulario = ({ pacientes, setPacientes }) => {
         setEmail("")
         setAlta("")
         setSintomas("")
+
+        setTimeout(() => {
+            setAlerta({})
+        }, 3000
+        )
     }
 
     const { mensaje } = alerta;
@@ -82,12 +106,12 @@ const Formulario = ({ pacientes, setPacientes }) => {
 
                 <div className="mb-5">
                     <label htmlFor="fecha_alta" className="block text-gray-700 uppercase font-bold">Fecha Alta</label>
-                    <input type="date" className="shadow-lg border-2 w-full p-2 mt-2 placeholder-gray-500 rounded-md" name="fecha_alta" id="fecha_alta" value={alta} onChange={e => { setAlta(e.target.value) }} />
+                    <input type="date" className="shadow-lg border-2 w-full p-2 mt-2 placeholder-gray-400 rounded-md" name="fecha_alta" id="fecha_alta" value={alta} onChange={e => { setAlta(e.target.value) }} />
                 </div>
 
                 <div className="mb-5">
                     <label htmlFor="sintomas" className="block text-gray-700 uppercase font-bold">Sintomas</label>
-                    <textarea className="shadow-lg border-2 w-full p-2 mt-2 placeholder-gray-500 rounded-md" placeholder="Sintomas de la Mascota" name="sintomas" id="sintomas" value={sintomas} onChange={e => setSintomas(e.target.value)} />
+                    <textarea className="shadow-lg border-2 w-full p-2 mt-2 placeholder-gray-400     rounded-md" placeholder="Sintomas de la Mascota" name="sintomas" id="sintomas" value={sintomas} onChange={e => setSintomas(e.target.value)} />
                 </div>
 
                 <input type="submit" className="bg-indigo-600 w-full p-3 text-white uppercase font-bold hover:bg-indigo-700 hover:cursor-pointer transition-all" value="Agregar Paciente" />

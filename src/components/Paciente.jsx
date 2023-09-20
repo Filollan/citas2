@@ -1,9 +1,10 @@
-const Paciente = ({paciente, setPacientes, pacientes}) => {
-console.log("paciente")
-    const {nombre, propietario, email, alta, sintomas, id} = paciente
+const Paciente = ({ paciente, setPacientes, pacientes, setEditando, setPaciente }) => {
+    console.log("paciente")
+    const { nombre, propietario, email, alta, sintomas, id } = paciente
 
     const eliminarPaciente = (id) => {
-        const pacienteActualizados = pacientes.filter((pacienteState, index) => index !== id);
+        const pacienteActualizados = pacientes.filter(
+            (pacienteState) => pacienteState.id !== id);
         setPacientes(pacienteActualizados)
     }
     return (
@@ -25,7 +26,13 @@ console.log("paciente")
             </p>
 
             <button type="button" className="bg-red-500 text-white rounded-md uppercase hover:bg-red-600"
-             onClick={() => {eliminarPaciente(id)}}>Eliminar</button>
+                onClick={() => { eliminarPaciente(id) }}>Eliminar</button>
+            <button type="button" className="bg-indigo-500 p-3 text-white rounded-md uppercase hover:bg-indigo-600"
+                onClick={() => {
+                    setEditando(true)
+                    setPaciente(paciente)
+                }}
+            >editar</button>
         </div>
     )
 }
